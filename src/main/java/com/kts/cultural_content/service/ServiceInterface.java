@@ -13,4 +13,5 @@ public interface ServiceInterface<T> {
     T update(T entity, Long id) throws Exception;
 
     void delete(Long id) throws Exception;
+
 }
