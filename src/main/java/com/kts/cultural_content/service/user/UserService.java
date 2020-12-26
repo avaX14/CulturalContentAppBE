@@ -1,7 +1,7 @@
 package com.kts.cultural_content.service.user;
 
-import com.kts.cultural_content.dto.UserEditDTO;
 import com.kts.cultural_content.dto.UserRegistrationDTO;
+import com.kts.cultural_content.dto.UserEditDTO;
 import com.kts.cultural_content.model.User;
 
 import java.util.List;

@@ -1,0 +1,48 @@
+package com.kts.cultural_content.repository;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import com.kts.cultural_content.model.Authority;
+
+import static org.junit.Assert.assertEquals;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class AuthorityRepositoryIntegrationTest {
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Test
+    public void findByNameUser(){
+        Long id = 1l;
+        String name = "ROLE_USER";
+
+        Authority a = authorityRepository.findByName(name);
+        assertEquals(id, a.getId());
+        assertEquals(name, a.getName());
+    }
+
+    @Test
+    public void findByNameAdmin(){
+        Long id = 2l;
+        String name = "ROLE_ADMIN";
+
+        Authority a = authorityRepository.findByName(name);
+        assertEquals(id, a.getId());
+        assertEquals(name, a.getName());
+    }
+
+    @Test
+    public void findByNameFail(){
+        String name = "failName";
+
+        Authority a = authorityRepository.findByName(name);
+        assertEquals(null, a);
+    }
+
+
+}
