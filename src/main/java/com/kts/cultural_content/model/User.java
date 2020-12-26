@@ -41,7 +41,7 @@ public class User implements UserDetails {
     private Timestamp lastPasswordResetDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authority",
+    @JoinTable(name = "user_table_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private Set<Authority> authorities = new HashSet<>();
@@ -50,8 +50,8 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String email, String password) {
-        this.email = email;
+    public User(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
