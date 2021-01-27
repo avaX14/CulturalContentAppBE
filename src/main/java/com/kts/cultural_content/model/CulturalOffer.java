@@ -1,12 +1,13 @@
 package com.kts.cultural_content.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="offers")
 public class CulturalOffer {
-
-    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name="id")
@@ -16,10 +17,10 @@ public class CulturalOffer {
     @Column(name="name", nullable = false)
     private String name;
 
-    @Column(name="description")
+    @Column(name="description", columnDefinition="TEXT")
     private String description;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
@@ -29,20 +30,23 @@ public class CulturalOffer {
     @Column(name="rating")
     private double rating;
 
+    @OneToMany(mappedBy = "offer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Comment> comments = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private CategoryType type;
 
-
     public CulturalOffer() {
     }
 
-    public CulturalOffer(Long id, String name, String description, Address address, String longitude, String latitude, String imagePath, CategoryType type) {
+    public CulturalOffer(Long id, String name, String description, Address address, String imagePath, double rating, CategoryType type, Set<Comment> comments) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.address = address;
         this.imagePath = imagePath;
+        this.rating = rating;
         this.type = type;
     }
 
@@ -86,6 +90,14 @@ public class CulturalOffer {
         this.imagePath = imagePath;
     }
 
+    public double getRating() {
+        return this.rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
     public CategoryType getType() {
         return this.type;
     }
@@ -114,9 +126,13 @@ public class CulturalOffer {
         return this;
     }
 
-
     public CulturalOffer imagePath(String imagePath) {
         setImagePath(imagePath);
+        return this;
+    }
+
+    public CulturalOffer rating(double rating) {
+        setRating(rating);
         return this;
     }
 
@@ -124,5 +140,5 @@ public class CulturalOffer {
         setType(type);
         return this;
     }
-
+    
 }

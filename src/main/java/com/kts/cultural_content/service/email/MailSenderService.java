@@ -27,6 +27,7 @@ public class MailSenderService {
 
         message.setText("You can activate you'r account on this link http://localhost:4200/verify?token=" + token.getToken());
 
+
         // verifications
         if(token.getUser().getEmail() == null){
             message.setText("Error. Email cannot be null.");

@@ -31,4 +31,16 @@ public class UserMapper {
 
         return user;
     }
+
+    public static User toEntity(UserDTO userInfo) {
+        User user = new User();
+        user.setUsername(userInfo.getUsername());
+        user.setActivatedAccount(false);
+        user.setEmail(userInfo.getEmail());
+        user.setFirstName(userInfo.getFirstName());
+        user.setLastName(userInfo.getLastName());
+        user.setPassword("");
+
+        return user;
+    }
 }

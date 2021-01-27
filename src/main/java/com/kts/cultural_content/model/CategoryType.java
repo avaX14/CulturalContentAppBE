@@ -27,7 +27,6 @@ public class CategoryType {
 
     */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-
     private CulturalContentCategory category;
 
     public CategoryType() {

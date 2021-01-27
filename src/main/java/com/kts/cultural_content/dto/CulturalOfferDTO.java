@@ -17,6 +17,8 @@ public class CulturalOfferDTO {
 
     private String imagePath;
 
+    @NotNull(message = "Type of offer must be provided")
+    private Long typeId;
 
     public CulturalOfferDTO(){
 
@@ -28,15 +30,17 @@ public class CulturalOfferDTO {
         this.address = new AddressDTO(offer.getAddress());
         this.description = offer.getDescription();
         this.imagePath = offer.getImagePath();
+        this.typeId = offer.getType().getId();
     }
 
 
-    public CulturalOfferDTO(Long id, String name, AddressDTO address, String description, String imagePath) {
+    public CulturalOfferDTO(Long id, String name, AddressDTO address, String description, String imagePath, Long typeId) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.description = description;
         this.imagePath = imagePath;
+        this.typeId = typeId;
     }
 
     public Long getId() {
@@ -104,5 +108,14 @@ public class CulturalOfferDTO {
         setImagePath(imagePath);
         return this;
     }
+
+    public Long getTypeId() {
+        return this.typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
+
 
 }

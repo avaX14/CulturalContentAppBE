@@ -3,13 +3,10 @@ package com.kts.cultural_content.model;
 import com.kts.cultural_content.dto.AddressDTO;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "addresses")
 public class Address {
-
-    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")

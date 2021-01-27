@@ -4,6 +4,8 @@ import com.kts.cultural_content.model.CategoryType;
 import com.kts.cultural_content.model.CulturalContentCategory;
 import com.kts.cultural_content.repository.CategoryTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,12 @@ public class CategoryTypeService {
     @Autowired
     private CulturalContentCategoryService culturalContentCategoryService;
 
-    public List<CategoryType> findAll(Long categoryId) {
+    public Page<CategoryType> findAll(Pageable pageable) {
+
+        return categoryTypeRepository.findAll(pageable);
+    }
+
+    public List<CategoryType> findAllByCategoryId(Long categoryId) {
 
         return categoryTypeRepository.findByCategoryId(categoryId);
     }

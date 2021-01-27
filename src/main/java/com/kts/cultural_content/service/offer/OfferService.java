@@ -9,8 +9,11 @@ import  com.kts.cultural_content.model.CulturalOffer;
 import java.util.List;
 
 public interface OfferService {
-    CulturalOffer addOffer(CulturalOfferDTO event);
+    CulturalOffer addOffer(CulturalOfferDTO offer);
     Page<CulturalOffer> getAllCulturalOffer(Pageable pageable);
-    CulturalOffer editCulturalOffer(CulturalOfferDTO event);
+    CulturalOffer editCulturalOffer(CulturalOfferDTO offer);
     CulturalOffer getCulturalOfferById(Long id);
+    List<CulturalOfferDTO> findAllByCategoryType(Long id);
+    List<CulturalOfferDTO> searchOffers(String searchParam);
+    void deleteOffer(Long id) throws Exception;
 }
