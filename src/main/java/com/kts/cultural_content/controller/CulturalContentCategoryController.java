@@ -101,9 +101,20 @@ public class CulturalContentCategoryController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/category-types", method = RequestMethod.GET)
+    public ResponseEntity<Page<CategoryTypeDTO>> getAllCategoryTypes(Pageable pageable) {
+
+        Page<CategoryType> page = categoryTypeService.findAll(pageable);
+        List<CategoryTypeDTO> categorytypesDTOS = toCategoryTypeDTOList(page.toList());
+        Page<CategoryTypeDTO> pageCategorytypesDTOS = new PageImpl<>(categorytypesDTOS,page.getPageable(),page.getTotalElements());
+
+        return new ResponseEntity<>(pageCategorytypesDTOS, HttpStatus.OK);
+
+    }
+
     @RequestMapping(value = "/{categoryId}/category-types", method = RequestMethod.GET)
-    public ResponseEntity<List<CategoryTypeDTO>> getAllCategoryTypes(@PathVariable Long categoryId) {
-        List<CategoryType> categoryTypes = categoryTypeService.findAll(categoryId);
+    public ResponseEntity<List<CategoryTypeDTO>> getAllCategoryTypesByCategoryId(@PathVariable Long categoryId) {
+        List<CategoryType> categoryTypes = categoryTypeService.findAllByCategoryId(categoryId);
         return new ResponseEntity<>(toCategoryTypeDTOList(categoryTypes), HttpStatus.OK);
     }
 

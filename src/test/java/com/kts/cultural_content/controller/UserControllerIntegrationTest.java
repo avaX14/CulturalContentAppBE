@@ -1,6 +1,7 @@
 package com.kts.cultural_content.controller;
 
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.kts.cultural_content.dto.UserDTO;
 import com.kts.cultural_content.dto.UserEditDTO;
 import com.kts.cultural_content.dto.UserRegistrationDTO;
 import com.kts.cultural_content.exception.ErrorMessage;
+import com.kts.cultural_content.exception.ResourceAlreadyExistsException;
 import com.kts.cultural_content.model.User;
 import com.kts.cultural_content.repository.ConfirmationTokenRepository;
 import com.kts.cultural_content.repository.UserRepository;
@@ -35,7 +37,8 @@ public class UserControllerIntegrationTest {
 
     private String accessToken;
 
-    private void login() {
+    @Before
+    public void login() {
         JwtAuthenticationRequest loginDto = new JwtAuthenticationRequest(
                 UserConstants.DB_USERNAME, UserConstants.DB_PASSWORD
         );
@@ -64,12 +67,11 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void addNewUserUsernameTaken(){
-        login();
         UserRegistrationDTO dto = UserConstants.returnUserRegistrationDto();
         dto.setUsername(UserConstants.DB_USERNAME);
 
         ResponseEntity<ErrorMessage> response = restTemplate.exchange(
-                "/api/users/public/add-user",HttpMethod.POST,createUserDtoRequest(dto),ErrorMessage.class);
+                "/api/users/public/register",HttpMethod.POST,createUserDtoRequest(dto),ErrorMessage.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Username '" + dto.getUsername() + "' already exists.", response.getBody().getMessage() );
@@ -81,10 +83,10 @@ public class UserControllerIntegrationTest {
         dto.setRepeatPassword("repPassword2");
 
         ResponseEntity<ErrorMessage> response = restTemplate.exchange(
-                "/api/users/public/add-user",HttpMethod.POST,createUserDtoRequest(dto),ErrorMessage.class);
+                "/api/users/public/register",HttpMethod.POST,createUserDtoRequest(dto),ErrorMessage.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Provided passwords must be the same.", response.getBody().getMessage() );
+        assertEquals("Provided passwords must be the same.", response.getBody().getMessage());
     }
 
     //email taken
@@ -94,7 +96,7 @@ public class UserControllerIntegrationTest {
         dto.setEmail(UserConstants.DB_EMAIL);
 
         ResponseEntity<ErrorMessage> response = restTemplate.exchange(
-                "/api/users/public/add-user",HttpMethod.POST,createUserDtoRequest(dto),ErrorMessage.class);
+                "/api/users/public/register",HttpMethod.POST,createUserDtoRequest(dto),ErrorMessage.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Email '" + dto.getEmail() + "' is taken.", response.getBody().getMessage() );
@@ -106,7 +108,7 @@ public class UserControllerIntegrationTest {
         UserRegistrationDTO dto = UserConstants.returnUserRegistrationDto();
 
         ResponseEntity<UserDTO> response = restTemplate.exchange(
-                "/api/users/public/add-user",HttpMethod.POST,createUserDtoRequest(dto),UserDTO.class);
+                "/api/users/public/register",HttpMethod.POST,createUserDtoRequest(dto),UserDTO.class);
 
         UserDTO result = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -127,11 +129,11 @@ public class UserControllerIntegrationTest {
     //getProfileData
     @Test
     public void getProfileData(){
-        login();
         ResponseEntity<UserDTO> response = restTemplate.exchange(
                 "/api/users/my-profile", HttpMethod.GET, createHttpEntity(), UserDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         UserDTO dto = response.getBody();
+        System.out.println(dto.toString());
         assertEquals(UserConstants.DB_USERNAME, dto.getUsername());
         assertEquals(UserConstants.DB_FIRST_NAME, dto.getFirstName());
         assertEquals(UserConstants.DB_LAST_NAME, dto.getLastName());
@@ -148,14 +150,14 @@ public class UserControllerIntegrationTest {
         UserEditDTO dto = new UserEditDTO();
         dto.setFirstName("NewName");
         dto.setLastName("NewSurname");
-        dto.setEmail("miodrag.lakic@maildrop.cc");
+        dto.setEmail("markoMarkovic@maildrop.cc");
 
-        login();
-        ResponseEntity<ErrorMessage> response = restTemplate.exchange(
-                "/api/users/my-profile", HttpMethod.PUT, createHttpEntityEditUser(dto), ErrorMessage.class);
+        ResponseEntity<ResourceAlreadyExistsException> response = restTemplate.exchange(
+                "/api/users/my-profile", HttpMethod.PUT, createHttpEntityEditUser(dto), ResourceAlreadyExistsException.class);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Email '" + dto.getEmail() + "' is taken.", response.getBody().getMessage());
+        System.out.println("MY EXSEPSN " + response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(ResourceAlreadyExistsException.class, response.getBody());
 
     }
 
@@ -167,7 +169,6 @@ public class UserControllerIntegrationTest {
         dto.setLastName("NewSurname");
         dto.setEmail("newEmail@maildrop.com");
 
-        login();
         ResponseEntity<UserEditDTO> response = restTemplate.exchange(
                 "/api/users/my-profile", HttpMethod.PUT, createHttpEntityEditUser(dto), UserEditDTO.class);
 
@@ -183,8 +184,6 @@ public class UserControllerIntegrationTest {
         dto.setFirstName(UserConstants.DB_FIRST_NAME);
         dto.setLastName(UserConstants.DB_LAST_NAME);
         dto.setEmail(UserConstants.DB_EMAIL);
-        ResponseEntity<UserEditDTO> response2 = restTemplate.exchange(
-                "/api/users/my-profile", HttpMethod.PUT, createHttpEntityEditUser(dto), UserEditDTO.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }

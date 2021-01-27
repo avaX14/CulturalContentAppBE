@@ -3,6 +3,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+._.DS_Store
+.DS_Store
+._.gitignore
+._*
 
 ### STS ###
 .apt_generated

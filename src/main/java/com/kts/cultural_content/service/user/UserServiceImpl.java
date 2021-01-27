@@ -9,6 +9,7 @@ import com.kts.cultural_content.common.consts.UserRoles;
 import com.kts.cultural_content.dto.UserEditDTO;
 import com.kts.cultural_content.dto.UserRegistrationDTO;
 import com.kts.cultural_content.exception.ApiRequestException;
+import com.kts.cultural_content.exception.ResourceAlreadyExistsException;
 import com.kts.cultural_content.exception.ResourceNotFoundException;
 import com.kts.cultural_content.helper.UserMapper;
 import com.kts.cultural_content.model.ConfirmationToken;
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userRepository.findByEmail(userInfo.getEmail()) != null) {
-            throw new ApiRequestException("Email '" + userInfo.getEmail() + "' is taken.");
+            throw new ResourceAlreadyExistsException("Email '" + userInfo.getEmail() + "' is taken.");
         }
 
         User user = createNewUserObject(userInfo);
